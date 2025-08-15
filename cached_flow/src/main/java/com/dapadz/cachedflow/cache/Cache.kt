@@ -40,8 +40,8 @@ import kotlinx.coroutines.flow.onEach
  *
  *     // Example of using a key to store/retrieve data
  *     val key = stringCacheKey("user_profile")
- *     Cache.saveToCache(key, "John Doe")
- *     val profileFlow = Cache.getFromCache(key)
+ *     val request = repository.getProfile()
+ *         .cache(key)
  * }
  * ```
  *

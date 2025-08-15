@@ -1,6 +1,7 @@
 plugins {
     id("java-library")
     alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.jetbrains.kotlin.plugin.serialization)
     `maven-publish`
 }
 java {
@@ -14,17 +15,18 @@ kotlin {
 }
 dependencies {
     implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.jetbrains.kotlinx.serialization)
+    api(project(":cached_flow"))
 }
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("CachedFlow") {
                 groupId = "com.dapadz"
-                artifactId = "cachedflow"
+                artifactId = "ext.serialization"
                 version = "1.0.0"
-
                 from(components["java"])
-                artifact(tasks.named("rootSourcesJar"))
+                artifact(tasks.named("extSerializationSourcesJar"))
             }
         }
         repositories {
@@ -39,7 +41,7 @@ afterEvaluate {
         }
     }
 }
-tasks.register<Jar>("rootSourcesJar") {
+tasks.register<Jar>("extSerializationSourcesJar") {
     archiveClassifier.set("sources")
     from(sourceSets["main"].allSource)
 }

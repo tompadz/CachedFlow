@@ -1,30 +1,41 @@
 plugins {
-    id("java-library")
-    alias(libs.plugins.jetbrains.kotlin.jvm)
+    alias(libs.plugins.android.library)
+    alias(libs.plugins.kotlin.android)
     `maven-publish`
 }
-java {
-    sourceCompatibility = JavaVersion.VERSION_11
-    targetCompatibility = JavaVersion.VERSION_11
-}
-kotlin {
-    compilerOptions {
-        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_11
+
+android {
+    namespace = "com.dapadz.cachedflow.cache.android"
+    compileSdk = 36
+    defaultConfig {
+        minSdk = 24
+    }
+    buildTypes {
+        release {
+            isMinifyEnabled = false
+        }
+    }
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_11
+        targetCompatibility = JavaVersion.VERSION_11
+    }
+    kotlinOptions {
+        jvmTarget = "11"
     }
 }
 dependencies {
-    implementation(libs.kotlinx.coroutines.core)
+    implementation(libs.androidx.core.ktx)
+    implementation(libs.androidx.appcompat)
+    api(project(":cached_flow"))
 }
 afterEvaluate {
     publishing {
         publications {
             create<MavenPublication>("CachedFlow") {
                 groupId = "com.dapadz"
-                artifactId = "cachedflow"
+                artifactId = "ext.android"
                 version = "1.0.0"
-
-                from(components["java"])
-                artifact(tasks.named("rootSourcesJar"))
+                artifact(tasks.named("extAndroidSourcesJar"))
             }
         }
         repositories {
@@ -39,7 +50,7 @@ afterEvaluate {
         }
     }
 }
-tasks.register<Jar>("rootSourcesJar") {
+tasks.register<Jar>("extAndroidSourcesJar") {
     archiveClassifier.set("sources")
     from(sourceSets["main"].allSource)
 }

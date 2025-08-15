@@ -20,8 +20,7 @@ enum class CacheStrategyType {
 
     /**
      * Will return only the cache data,
-     * if the cache has not been written, it will return
-     * [RuntimeException]
+     * if the cache has not been written, it will return [RuntimeException]
      * @see GetCacheOnly
      */
     ONLY_CACHE,

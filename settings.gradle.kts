@@ -22,3 +22,5 @@ dependencyResolutionManagement {
 rootProject.name = "CachedFlow"
 include(":app")
 include(":cached_flow")
+include(":ext:serialization")
+include(":ext:android")
