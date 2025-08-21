@@ -21,8 +21,7 @@ afterEvaluate {
             create<MavenPublication>("CachedFlow") {
                 groupId = "com.dapadz"
                 artifactId = "cachedflow"
-                version = "1.0.0"
-
+                version = "0.0.3"
                 from(components["java"])
                 artifact(tasks.named("rootSourcesJar"))
             }

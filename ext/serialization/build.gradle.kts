@@ -21,9 +21,9 @@ dependencies {
 afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("CachedFlow") {
+            create<MavenPublication>("CachedFlowExtSerialization") {
                 groupId = "com.dapadz"
-                artifactId = "ext.serialization"
+                artifactId = "cachedflow-ext-serialization"
                 version = "1.0.0"
                 from(components["java"])
                 artifact(tasks.named("extSerializationSourcesJar"))

@@ -22,6 +22,11 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+        }
+    }
 }
 dependencies {
     implementation(libs.androidx.core.ktx)
@@ -31,11 +36,11 @@ dependencies {
 afterEvaluate {
     publishing {
         publications {
-            create<MavenPublication>("CachedFlow") {
+            create<MavenPublication>("CachedFlowExtAndroid") {
                 groupId = "com.dapadz"
-                artifactId = "ext.android"
+                artifactId = "cachedflow-ext-android"
                 version = "1.0.0"
-                artifact(tasks.named("extAndroidSourcesJar"))
+                from(components["release"])
             }
         }
         repositories {
@@ -49,8 +54,4 @@ afterEvaluate {
             }
         }
     }
-}
-tasks.register<Jar>("extAndroidSourcesJar") {
-    archiveClassifier.set("sources")
-    from(sourceSets["main"].allSource)
 }
