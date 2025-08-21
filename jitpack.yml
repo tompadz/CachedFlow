@@ -1,0 +1,5 @@
+jdk:
+  - openjdk17
+
+install:
+  - ./gradlew -Pgroup=com.github.tompadz -Pversion=${VERSION} :cached_flow:publishToMavenLocal :ext:android:publishToMavenLocal :ext:serialization:publishToMavenLocal -x test
