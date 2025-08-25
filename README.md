@@ -138,3 +138,104 @@ class MyKey(name: String): Key<MyType>(name) {
     override suspend fun saveToStore(item: MyType, store: Store) = ...
 }
 ```
+
+# Extension
+
+To simplify integration and expand functionality, additional extension modules are available.
+They allow you to quickly connect the library for specific platforms and use cases.
+
+## Android
+
+A set of extensions for convenient work on Android.
+The module includes:
+- a ready-to-use `Store` implementation based on `SharedPreferences`
+- `AndroidLogger`, which uses the standard `Log`
+
+### Installation
+
+```kotlin
+dependencies {
+    implementation("com.dapadz:cachedflow:<version>")
+    implementation("com.dapadz:cachedflow-ext-android:<version>")
+}
+```
+
+### Usage
+
+Example of initializing `Cache` with `SharedPreferenceStore` and `AndroidLogger`:
+
+```kotlin
+private fun initializeCache() {
+   Cache.initialize(
+       store = SharedPreferenceStore(context = this),
+       logger = AndroidLogger()
+   )
+}
+```
+
+## Kotlin Serialization
+
+An extension that adds support for [Kotlinx Serialization](https://github.com/Kotlin/kotlinx.serialization).
+It allows storing and restoring `Serializable` classes from the cache.
+
+Includes convenient keys:
+- `serializableKey` — for a single object
+- `serializableListKey` — for a list of objects
+
+### Installation
+
+```kotlin
+dependencies {
+    implementation("com.dapadz:cachedflow:<version>")
+    implementation("com.dapadz:cachedflow-ext-serialization:<version>")
+}
+```
+
+### Usage
+
+Example of caching a `Serializable` class:
+
+```kotlin
+@Serializable
+data class Dog(val name: String)
+
+fun getGoodDog(): Flow<Dog> {
+    return dogRepository.getGoodDog()
+        .cache(serializableKey("goodDog"))
+}
+```
+
+You can also use `SerializersModule` for more complex scenarios —
+for example, serializing interfaces and polymorphic classes:
+
+```kotlin
+interface Animal {
+    val name: String
+}
+
+@Serializable
+data class Dog(
+    override val name: String,
+    val isGoodBoy: Boolean
+) : Animal
+
+@Serializable
+data class Cat(
+    override val name: String
+) : Animal
+
+fun getAnimals(): Flow<List<Animal>> {
+    return repository.getAnimals()
+        .cache(
+            serializableListKey(
+                name = "animals",
+                module = SerializersModule {
+                    polymorphic(Animal::class) {
+                        subclass(Cat::class)
+                        subclass(Dog::class)
+                    }
+                }
+            )
+        )
+}
+```
